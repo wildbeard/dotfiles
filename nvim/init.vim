@@ -35,7 +35,7 @@ set completeopt=menuone,noinsert,noselect
 let g:completion_matching_strategy_list=['exact', 'substring', 'fuzzy']
 
 lua require'lspconfig'.vuels.setup{}
-lua require'lspconfig'.intelephense.setup{ init_options = { licenseKey = "00GEQR961O987WT" } }
+lua require'lspconfig'.intelephense.setup{ init_options = { licenseKey = "KEY HERE" } }
 
 let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
