@@ -11,3 +11,7 @@
   * Unsure if this is currently used
 * `npm i -g typescript-language-server`
   * Used for most any JS file (typescript, react, vue, js)
+
+### Required Binaries
+* [ripgrep](https://github.com/BurntSushi/ripgrep)
+  * Used by [Telescope](https://github.com/nvim-telescope/telescope.nvim) for `live_grep` and `grep_string`
