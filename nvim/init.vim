@@ -27,6 +27,7 @@ call plug#begin()
    Plug 'hrsh7th/nvim-cmp'
    Plug 'jose-elias-alvarez/null-ls.nvim'
    Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+   Plug 'nvim-telescope/telescope-fzy-native.nvim'
 call plug#end()
 
 colorscheme gruvbox
@@ -36,7 +37,9 @@ let g:completion_matching_strategy_list=['exact', 'substring', 'fuzzy']
 
 lua require'lspconfig'.vuels.setup{}
 lua require'lspconfig'.intelephense.setup{ init_options = { licenseKey = "KEY HERE" } }
+lua require('telescope').load_extension('fzy_native')
 
 let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 
