@@ -25,6 +25,8 @@ call plug#begin()
    Plug 'hrsh7th/cmp-path'
    Plug 'hrsh7th/cmp-cmdline'
    Plug 'hrsh7th/nvim-cmp'
+   Plug 'hrsh7th/vim-vsnip'
+   Plug 'hrsh7th/vim-vsnip-integ'
    Plug 'jose-elias-alvarez/null-ls.nvim'
    Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
    Plug 'nvim-telescope/telescope-fzy-native.nvim'
