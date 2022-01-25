@@ -30,6 +30,7 @@ call plug#begin()
    Plug 'jose-elias-alvarez/null-ls.nvim'
    Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
    Plug 'nvim-telescope/telescope-fzy-native.nvim'
+   Plug 'tpope/vim-fugitive'
 call plug#end()
 
 colorscheme gruvbox
