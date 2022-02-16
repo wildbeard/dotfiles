@@ -11,6 +11,10 @@
   * Unsure if this is currently used
 * `npm i -g typescript-language-server`
   * Used for most any JS file (typescript, react, vue, js)
+* Clone [vscode-php-debug](git@github.com:xdebug/vscode-php-debug.git) into a desired folder
+  * Move into the repo and run `npm i && npm run build`
+  * Once done building keep note of the build path
+  * Use the absolute path to the build executable and set it as a value in the `args` table for `dap.adapters.php`
 
 ### Required Binaries
 * [ripgrep](https://github.com/BurntSushi/ripgrep)
