@@ -55,21 +55,23 @@ let g:go_info_mode='gopls'
 lua require'lspconfig'.vuels.setup{}
 lua require('telescope').load_extension('fzy_native')
 lua require'nvim-web-devicons'.setup{}
-lua require('dapui').setup()
 lua require('dap.ext.vscode').load_launchjs()
-lua require('nvim-dap-virtual-text').setup()
+lua require('nvim-dap-virtual-text').setup({ highlight_changed_variables = true,  highlight_new_as_changed = true, commented = true })
+
+"autocmd BufWritePre *.php ! /Users/press/.composer/vendor/bin/phpcbf --standard=PSR12 <afile>
 
 let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <Leader>ch <cmd>:noh<cr>
+nnoremap <leader>ch <cmd>:noh<cr>
 
 nnoremap <C-h> :bprev<cr>
 nnoremap <C-l> :bnext<cr>
 nnoremap <C-n> :NERDTreeToggle<cr>
 
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
+nnoremap <silent> <F6> :lua require'dap'.terminate()<CR>
 nnoremap <silent> <F10> :lua require'dap'.step_over()<CR>
 nnoremap <silent> <F11> :lua require'dap'.step_into()<CR>
 nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
