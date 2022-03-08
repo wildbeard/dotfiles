@@ -1,4 +1,7 @@
 local lspconfig = require'lspconfig'
+local lspconfig_configs = require'lspconfig.configs'
+local lspconfig_util = require 'lspconfig/util'
+local lspinstaller = require 'nvim-lsp-installer'
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
     vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or { silent = true, })
@@ -39,22 +42,15 @@ local on_attach = function(client, bufnr)
     end
 end
 
-lspconfig.tsserver.setup({
-    on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+lspinstaller.on_server_ready(function(server) 
+    local opts = {}
 
-        local ts_utils = require('nvim-lsp-ts-utils')
-        ts_utils.setup({})
-        ts_utils.setup_client(client)
+    if server.name == "gopls" then
+        opts.on_attach = on_attach
+    end
 
-        buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
-        buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
-        buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
-
-        on_attach(client, bufnr)
-    end,
-})
+    server:setup(opts)
+end)
 
 lspconfig.intelephense.setup{
     on_attach = on_attach,
@@ -62,6 +58,8 @@ lspconfig.intelephense.setup{
         licenseKey = ''
     },
 }
+
+lspconfig.gopls.setup{}
 
 local null_ls = require('null-ls')
 

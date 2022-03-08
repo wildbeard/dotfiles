@@ -10,10 +10,18 @@ set hidden
 set scrolloff=8
 set signcolumn=yes
 set matchpairs+=<:>
+set ignorecase
+
+" Folding
+" set foldmethod=indent
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set foldnestmax=10
+set nofoldenable
+set foldlevel=20
 
 call plug#begin()
    Plug 'preservim/nerdtree'
-   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
    Plug 'gruvbox-community/gruvbox'
    Plug 'neovim/nvim-lspconfig'
    Plug 'williamboman/nvim-lsp-installer'
@@ -42,6 +50,8 @@ call plug#begin()
    Plug 'mfussenegger/nvim-dap'
    Plug 'rcarriga/nvim-dap-ui'
    Plug 'theHamsta/nvim-dap-virtual-text'
+   Plug 'nathanaelkane/vim-indent-guides'
+   Plug 'ThePrimeagen/harpoon'
 call plug#end()
 
 colorscheme gruvbox
@@ -49,8 +59,9 @@ colorscheme gruvbox
 set completeopt=menuone,noinsert,noselect
 let g:completion_matching_strategy_list=['exact', 'substring', 'fuzzy']
 
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
 
 lua require'lspconfig'.vuels.setup{}
 lua require('telescope').load_extension('fzy_native')
@@ -58,13 +69,18 @@ lua require'nvim-web-devicons'.setup{}
 lua require('dap.ext.vscode').load_launchjs()
 lua require('nvim-dap-virtual-text').setup({ highlight_changed_variables = true,  highlight_new_as_changed = true, commented = true })
 
-"autocmd BufWritePre *.php ! /Users/press/.composer/vendor/bin/phpcbf --standard=PSR12 <afile>
-
 let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>ch <cmd>:noh<cr>
+
+" Harpoon
+nnoremap <leader>hm :lua require'harpoon.ui'.toggle_quick_menu()<cr>
+nnoremap <leader>hh :lua require'harpoon.ui'.nav_prev()<cr>
+nnoremap <leader>hl :lua require'harpoon.ui'.nav_next()<cr>
+nnoremap <leader>ha :lua require'harpoon.mark'.add_file()<cr>
+nnoremap <leader>hd :lua require'harpoon.mark'.rm_file()<cr>
 
 nnoremap <C-h> :bprev<cr>
 nnoremap <C-l> :bnext<cr>
