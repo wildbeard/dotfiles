@@ -1,8 +1,9 @@
 syntax on
 set relativenumber
 set nu
-set tabstop=4 softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set expandtab
 set smartindent
 set nohlsearch
@@ -63,7 +64,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 
-lua require'lspconfig'.vuels.setup{}
+" lua require'lspconfig'.vuels.setup{}
 lua require('telescope').load_extension('fzy_native')
 lua require'nvim-web-devicons'.setup{}
 lua require('dap.ext.vscode').load_launchjs()
@@ -95,3 +96,6 @@ nnoremap <silent> <F12> :lua require'dap'.step_out()<CR>
 let mapleader = " "
 nnoremap <leader>dui :lua require'dapui'.toggle()<CR>
 nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
+
+" Autocmds
+autocmd FileType php setlocal ts=4 sw=4 sts=4
