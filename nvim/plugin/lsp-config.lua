@@ -1,6 +1,3 @@
-local lspconfig = require'lspconfig'
-local lspconfig_configs = require'lspconfig.configs'
-local lspconfig_util = require 'lspconfig/util'
 local lspinstaller = require 'nvim-lsp-installer'
 
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
@@ -42,24 +39,33 @@ local on_attach = function(client, bufnr)
     end
 end
 
-lspinstaller.on_server_ready(function(server) 
+lspinstaller.on_server_ready(function(server)
     local opts = {}
+    opts.on_attach = on_attach
 
-    if server.name == "gopls" then
-        opts.on_attach = on_attach
+    if server.name == "intelephense" then
+      opts.settings = {
+        intelephense = {
+          licenceKey = '',
+          --diagnostics = {
+          --  undefinedTypes = false
+          --},
+        }
+      }
+    elseif server.name == "sumneko_lua" then
+      opts.settings = {
+        Lua = {
+          diagnostics = {
+            globals = { 'vim' }
+          }
+        }
+      }
     end
 
-    server:setup(opts)
+    if server.name ~= "tsserver" then
+      server:setup(opts)
+    end
 end)
-
-lspconfig.intelephense.setup{
-    on_attach = on_attach,
-    init_options = {
-        licenseKey = ''
-    },
-}
-
-lspconfig.gopls.setup{}
 
 local null_ls = require('null-ls')
 
