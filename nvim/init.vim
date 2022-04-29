@@ -74,6 +74,7 @@ let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fs :lua require'telescope.builtin'.lsp_document_symbols{}<cr>
 nnoremap <leader>ch <cmd>:noh<cr>
 
 " Harpoon
@@ -98,4 +99,4 @@ nnoremap <leader>dui :lua require'dapui'.toggle()<CR>
 nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
 
 " Autocmds
-autocmd FileType php setlocal ts=4 sw=4 sts=4
+autocmd FileType php setlocal ts=4 sw=4 sts=4 autoindent
