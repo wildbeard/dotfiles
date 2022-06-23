@@ -23,7 +23,9 @@ set foldlevel=20
 
 call plug#begin()
    Plug 'preservim/nerdtree'
-   Plug 'gruvbox-community/gruvbox'
+   " Plug 'gruvbox-community/gruvbox'
+   Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+   " Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
    Plug 'neovim/nvim-lspconfig'
    Plug 'williamboman/nvim-lsp-installer'
    Plug 'nvim-lua/plenary.nvim'
@@ -55,7 +57,12 @@ call plug#begin()
    Plug 'ThePrimeagen/harpoon'
 call plug#end()
 
-colorscheme gruvbox
+let g:catppuccin_flavour = 'mocha'
+colorscheme catppuccin
+" colorscheme gruvbox
+" colorscheme tokyonight
+" let g:tokyonight_style = "night"
+" let g:tokyonight_dark_sidebar = "true"
 
 set completeopt=menuone,noinsert,noselect
 let g:completion_matching_strategy_list=['exact', 'substring', 'fuzzy']
@@ -83,10 +90,12 @@ nnoremap <leader>hh :lua require'harpoon.ui'.nav_prev()<cr>
 nnoremap <leader>hl :lua require'harpoon.ui'.nav_next()<cr>
 nnoremap <leader>ha :lua require'harpoon.mark'.add_file()<cr>
 nnoremap <leader>hd :lua require'harpoon.mark'.rm_file()<cr>
+" NerdTree
+nnoremap <leader>nt :NERDTreeToggle<cr>
+nnoremap <leader>nf :NERDTreeFind<cr>
 
 nnoremap <C-h> :bprev<cr>
 nnoremap <C-l> :bnext<cr>
-nnoremap <C-n> :NERDTreeToggle<cr>
 
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
 nnoremap <silent> <F6> :lua require'dap'.terminate()<CR>
