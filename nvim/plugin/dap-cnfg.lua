@@ -11,15 +11,18 @@ dapui.setup({
     mappings = {
         expand = { '<CR>', '<LeftMouse>' }
     },
-    sidebar = {
+    layouts = {
+      {
         elements = {
-            { id = 'breakpoints', size = 0.5 },
-            { id = 'scopes', size = 0.5 }
+          'scopes',
+          'breakpoints',
+          'stacks',
+          'watches',
         },
+        size = 40,
+        position = 'left',
+      }
     },
-    tray = {
-        elements = {}
-    }
 })
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
