@@ -72,51 +72,51 @@ local ts_language_server = '/Users/press/.nvm/versions/node/v16.14.2/lib/node_mo
 local function on_new_config(new_config, new_root_dir)
   local function get_typescript_server_path(root_dir)
     local project_root = lspconfig_util.find_node_modules_ancestor(root_dir)
-    return project_root and (lspconfig_util.path.join(project_root, 'node_modules', 'typescript', 'lib', 'tsserverlibrary.js'))
-      or ''
+    return project_root and
+        (lspconfig_util.path.join(project_root, 'node_modules', 'typescript', 'lib', 'tsserverlibrary.js'))
+        or ''
   end
 
-  if
-    new_config.init_options
-    and new_config.init_options.typescript
-    and new_config.init_options.typescript.serverPath == ''
+  if new_config.init_options
+      and new_config.init_options.typescript
+      and new_config.init_options.typescript.serverPath == ''
   then
     new_config.init_options.typescript.serverPath = get_typescript_server_path(new_root_dir)
   end
 end
 
-local volar_cmd = {'vue-language-server', '--stdio'}
+local volar_cmd = { 'vue-language-server', '--stdio' }
 local volar_root_dir = lspconfig_util.root_pattern 'package.json'
 
 lspinstaller.on_server_ready(function(server)
-    local opts = {}
-    opts.on_attach = attachFn(false)
+  local opts = {}
+  opts.on_attach = attachFn(false)
 
-    if server.name == "intelephense" then
-      opts.settings = {
-        intelephense = {
-          licenceKey = '',
-          --diagnostics = {
-          --  undefinedTypes = false
-          --},
-          files = {
-            associations = { '*.php', '*.mjml', '*.phtml' }
-          }
+  if server.name == "intelephense" then
+    opts.settings = {
+      intelephense = {
+        licenceKey = '',
+        --diagnostics = {
+        --  undefinedTypes = false
+        --},
+        files = {
+          associations = { '*.php', '*.mjml', '*.phtml' }
         }
       }
-    elseif server.name == "sumneko_lua" then
-      opts.settings = {
-        Lua = {
-          diagnostics = {
-            globals = { 'vim' }
-          }
+    }
+  elseif server.name == "sumneko_lua" then
+    opts.settings = {
+      Lua = {
+        diagnostics = {
+          globals = { 'vim' }
         }
       }
-    elseif server.name == "tsserver" then
-      opts.on_attach = attachFn(true)
-    end
+    }
+  elseif server.name == "tsserver" or server.name == "volar" then
+    opts.on_attach = attachFn(true)
+  end
 
-    server:setup(opts)
+  server:setup(opts)
 end)
 
 lspconfig_configs.volar_api = {
@@ -154,7 +154,7 @@ lspconfig_configs.volar_api = {
     },
   }
 }
-lspconfig.volar_api.setup{}
+lspconfig.volar_api.setup {}
 
 lspconfig_configs.volar_doc = {
   default_config = {
@@ -173,7 +173,7 @@ lspconfig_configs.volar_doc = {
         implementation = true, -- new in @volar/vue-language-server v0.33
         documentHighlight = true,
         documentLink = true,
-        codeLens = { showReferencesNotification = true},
+        codeLens = { showReferencesNotification = true },
         -- not supported - https://github.com/neovim/neovim/pull/15723
         semanticTokens = false,
         diagnostics = true,
@@ -182,7 +182,7 @@ lspconfig_configs.volar_doc = {
     },
   }
 }
-lspconfig.volar_doc.setup{}
+lspconfig.volar_doc.setup {}
 
 lspconfig_configs.volar_html = {
   default_config = {
@@ -211,9 +211,9 @@ lspconfig_configs.volar_html = {
     },
   }
 }
-lspconfig.volar_html.setup{}
+lspconfig.volar_html.setup {}
 
-lspconfig.cssls.setup{}
+lspconfig.cssls.setup {}
 
 local null_ls = require('null-ls')
 

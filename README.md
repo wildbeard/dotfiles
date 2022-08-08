@@ -2,6 +2,8 @@
 * `npm i -g eslint_d`
   * Used for eslint
   * `eslint_d` is a daemon and runs a bit faster than standard eslint
+* `npm i -g vls`
+  * Language server for Vue and Volar
 * Clone [vscode-php-debug](https://github.com/xdebug/vscode-php-debug) into a desired folder
   * Move into the repo and run `npm i && npm run build`
   * Once done building keep note of the build path
