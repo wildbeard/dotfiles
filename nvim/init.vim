@@ -55,6 +55,7 @@ call plug#begin()
    Plug 'theHamsta/nvim-dap-virtual-text'
    Plug 'nathanaelkane/vim-indent-guides'
    Plug 'ThePrimeagen/harpoon'
+   Plug 'ellisonleao/glow.nvim'
 call plug#end()
 
 let g:catppuccin_flavour = 'mocha'
@@ -71,11 +72,11 @@ let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 
-" lua require'lspconfig'.vuels.setup{}
 lua require('telescope').load_extension('fzy_native')
 lua require'nvim-web-devicons'.setup{}
 lua require('dap.ext.vscode').load_launchjs()
 lua require('nvim-dap-virtual-text').setup({ highlight_changed_variables = true,  highlight_new_as_changed = true, commented = true })
+lua require('glow').setup({ style = "dark", width = 120 })
 
 let mapleader = " "
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
