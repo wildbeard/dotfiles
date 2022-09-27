@@ -2,8 +2,8 @@
 * `npm i -g eslint_d`
   * Used for eslint
   * `eslint_d` is a daemon and runs a bit faster than standard eslint
-* `npm i -g vls`
-  * Language server for Vue and Volar
+* `npm i -g @volar/vue-language-server`
+  * Vue Language server from [Volar](https://github.com/johnsoncodehk/volar)
 * Clone [vscode-php-debug](https://github.com/xdebug/vscode-php-debug) into a desired folder
   * Move into the repo and run `npm i && npm run build`
   * Once done building keep note of the build path
@@ -16,9 +16,10 @@
   * Used by [Telescope](https://github.com/nvim-telescope/telescope.nvim) for `live_grep` and `grep_string`
 
 ### Getting Started
-- Once the required binars are installed, open any directory in nvim via `nvim .`
+- Once the required binaries are installed, open any directory in nvim via `nvim .`
 - Run the command `:PlugInstall` to install the specified plugins
 - Restart nvim
 - Re-open any directory and install the following language servers by running:
-  `:LspInstall tsserver volar tailwindcss intelephense sumneko-lua`
+  `:LspInstall tailwindcss intelephense sumneko-lua`
+- Open the your `plugin/lsp-config.lua` and update the `volar-cmd` and `ts_language_server` values to match your install
 - Verify installed language servers by running `:LspInstallInfo`
