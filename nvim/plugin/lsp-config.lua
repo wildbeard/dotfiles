@@ -67,7 +67,7 @@ local attachFn = function(isVolar)
   return attach
 end
 
-local ts_language_server = '/Users/press/.nvm/versions/node/v16.14.2/lib/node_modules/typescript/lib/tsserverlibrary.js'
+local typescript_path = '/home/press/.nvm/versions/node/v16.18.1/lib/node_modules/typescript/lib'
 
 local function on_new_config(new_config, new_root_dir)
   local function get_typescript_server_path(root_dir)
@@ -112,7 +112,7 @@ lspinstaller.on_server_ready(function(server)
         }
       }
     }
-  elseif server.name == "tsserver" or server.name == "volar" then
+  elseif server.name == "tsserver" then -- or server.name == "volar" then
     opts.on_attach = attachFn(true)
   end
 
@@ -130,7 +130,7 @@ lspconfig_configs.volar_api = {
     filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
     init_options = {
       typescript = {
-        serverPath = ts_language_server
+        tsdk = typescript_path
       },
       languageFeatures = {
         implementation = true, -- new in @volar/vue-language-server v0.33
@@ -167,7 +167,7 @@ lspconfig_configs.volar_doc = {
     filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
     init_options = {
       typescript = {
-        serverPath = ts_language_server
+        tsdk = typescript_path
       },
       languageFeatures = {
         implementation = true, -- new in @volar/vue-language-server v0.33
@@ -195,7 +195,7 @@ lspconfig_configs.volar_html = {
     filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
     init_options = {
       typescript = {
-        serverPath = ts_language_server
+        tsdk = typescript_path
       },
       documentFeatures = {
         selectionRange = true,
