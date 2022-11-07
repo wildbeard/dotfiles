@@ -1,6 +1,5 @@
 local lspinstaller = require 'nvim-lsp-installer'
 local lspconfig = require 'lspconfig'
-local lspconfig_configs = require 'lspconfig.configs'
 local lspconfig_util = require 'lspconfig.util'
 
 local keymaps = {
@@ -30,7 +29,6 @@ local attachFn = function(isVolar)
 
     vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
     vim.cmd("command! LspDec lua vim.lsp.buf.declaration()")
-    vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
     vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
     vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
     vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
@@ -52,13 +50,12 @@ local attachFn = function(isVolar)
     buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
     buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
 
-    if isVolar then
-      client.server_capabilities.document_formatting = false
-    elseif client.server_capabilities.document_formatting then
+    -- This _should_ place nicely with eslint_d and null_ls
+    if client.server_capabilities.documentFormattingProvider then
       vim.cmd([[
         augroup LspFormatting
             autocmd! * <buffer>
-            autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+            autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
         augroup END
       ]])
     end
@@ -79,9 +76,9 @@ local function on_new_config(new_config, new_root_dir)
 
   if new_config.init_options
       and new_config.init_options.typescript
-      and new_config.init_options.typescript.serverPath == ''
+      and new_config.init_options.typescript.tsdk == ''
   then
-    new_config.init_options.typescript.serverPath = get_typescript_server_path(new_root_dir)
+    new_config.init_options.typescript.tsdk = get_typescript_server_path(new_root_dir)
   end
 end
 
@@ -119,99 +116,23 @@ lspinstaller.on_server_ready(function(server)
   server:setup(opts)
 end)
 
-lspconfig_configs.volar_api = {
-  default_config = {
-    cmd = volar_cmd,
-    root_dir = volar_root_dir,
-    on_new_config = on_new_config,
-    on_attach = attachFn(true),
-    -- filetypes = { 'vue'},
-    -- If you want to use Volar's Take Over Mode (if you know, you know)
-    filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
-    init_options = {
-      typescript = {
-        tsdk = typescript_path
-      },
-      languageFeatures = {
-        implementation = true, -- new in @volar/vue-language-server v0.33
-        references = true,
-        definition = true,
-        typeDefinition = true,
-        callHierarchy = true,
-        hover = true,
-        rename = true,
-        renameFileRefactoring = true,
-        signatureHelp = true,
-        codeAction = true,
-        workspaceSymbol = true,
-        completion = {
-          defaultTagNameCase = 'both',
-          defaultAttrNameCase = 'kebabCase',
-          getDocumentNameCasesRequest = false,
-          getDocumentSelectionRequest = false,
-        },
-      }
+lspconfig.volar.setup {
+  cmd = volar_cmd,
+  root_dir = volar_root_dir,
+  filetypes = {
+    'vue',
+    'json',
+    'typescript',
+    'javascript',
+  },
+  on_attach = attachFn(false),
+  on_new_config = on_new_config,
+  init_options = {
+    typescript = {
+      tsdk = typescript_path,
     },
   }
 }
-lspconfig.volar_api.setup {}
-
-lspconfig_configs.volar_doc = {
-  default_config = {
-    cmd = volar_cmd,
-    root_dir = volar_root_dir,
-    on_new_config = on_new_config,
-    on_attach = attachFn(true),
-    --filetypes = { 'vue'},
-    -- If you want to use Volar's Take Over Mode (if you know, you know):
-    filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
-    init_options = {
-      typescript = {
-        tsdk = typescript_path
-      },
-      languageFeatures = {
-        implementation = true, -- new in @volar/vue-language-server v0.33
-        documentHighlight = true,
-        documentLink = true,
-        codeLens = { showReferencesNotification = true },
-        -- not supported - https://github.com/neovim/neovim/pull/15723
-        semanticTokens = false,
-        diagnostics = true,
-        schemaRequestService = true,
-      }
-    },
-  }
-}
-lspconfig.volar_doc.setup {}
-
-lspconfig_configs.volar_html = {
-  default_config = {
-    cmd = volar_cmd,
-    root_dir = volar_root_dir,
-    on_new_config = on_new_config,
-    on_attach = attachFn(true),
-    --filetypes = { 'vue'},
-    -- If you want to use Volar's Take Over Mode (if you know, you know), intentionally no 'json':
-    filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-    init_options = {
-      typescript = {
-        tsdk = typescript_path
-      },
-      documentFeatures = {
-        selectionRange = true,
-        foldingRange = true,
-        linkedEditingRange = true,
-        documentSymbol = true,
-        -- not supported - https://github.com/neovim/neovim/pull/13654
-        documentColor = false,
-        documentFormatting = {
-          defaultPrintWidth = 100,
-        },
-      }
-    },
-  }
-}
-lspconfig.volar_html.setup {}
 
 lspconfig.cssls.setup {}
 
