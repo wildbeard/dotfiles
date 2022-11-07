@@ -53,8 +53,8 @@ local attachFn = function(isVolar)
     buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
 
     if isVolar then
-      client.resolved_capabilities.document_formatting = false
-    elseif client.resolved_capabilities.document_formatting then
+      client.server_capabilities.document_formatting = false
+    elseif client.server_capabilities.document_formatting then
       vim.cmd([[
         augroup LspFormatting
             autocmd! * <buffer>
