@@ -97,6 +97,8 @@ nnoremap <leader>nf :NERDTreeFind<cr>
 
 nnoremap <C-h> :bprev<cr>
 nnoremap <C-l> :bnext<cr>
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
 
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
 nnoremap <silent> <F6> :lua require'dap'.terminate()<CR>
