@@ -4,10 +4,21 @@
   * `eslint_d` is a daemon and runs a bit faster than standard eslint
 * `npm i -g @volar/vue-language-server`
   * Vue Language server from [Volar](https://github.com/johnsoncodehk/volar)
-* Clone [vscode-php-debug](https://github.com/xdebug/vscode-php-debug) into a desired folder
+
+### Xdebug
+  * Clone [vscode-php-debug](https://github.com/xdebug/vscode-php-debug) into a desired folder
   * Move into the repo and run `npm i && npm run build`
   * Once done building keep note of the build path
+    * Typically `/vscode-php-debug/out`
   * Use the absolute path to the build executable and set it as a value in the `args` table for `dap.adapters.php`
+    * Example `/path/to/vscode-php-debug/out/phpDebug.js`
+    ```lua
+      dap.adapters.php = {
+        -- ..
+        args = { '/path/to/vscode-php-debug/out/phpDebug.js' }
+      }
+    ```
+  * If you are unable to connect to the xdebug client, try updating `xdebug.discover_client_host` to `1`
 
 ### Required Binaries
 * [vim-plug](https://github.com/junegunn/vim-plug)
