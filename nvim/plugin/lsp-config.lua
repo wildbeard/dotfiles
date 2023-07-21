@@ -135,10 +135,10 @@ require('lint').linters_by_ft = {
 }
 
 require('formatter').setup{
-  logging = true,
-  log_level = vim.log.levels.DEBUG,
   filetype = {
-    vue = require('formatter.filetypes.javascript').eslint_d,
+    vue = {
+      require('formatter.filetypes.javascript').eslint_d,
+    },
     javascript = {
       require('formatter.filetypes.javascript').eslint_d,
     },
