@@ -39,7 +39,6 @@ call plug#begin()
    Plug 'hrsh7th/nvim-cmp'
    Plug 'hrsh7th/vim-vsnip'
    Plug 'hrsh7th/vim-vsnip-integ'
-   Plug 'jose-elias-alvarez/null-ls.nvim'
    Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
    Plug 'kyazdani42/nvim-web-devicons'
    Plug 'nvim-telescope/telescope-fzy-native.nvim'
@@ -56,6 +55,8 @@ call plug#begin()
    Plug 'nathanaelkane/vim-indent-guides'
    Plug 'ThePrimeagen/harpoon'
    Plug 'ellisonleao/glow.nvim'
+   Plug 'mfussenegger/nvim-lint'
+   Plug 'mhartington/formatter.nvim'
 call plug#end()
 
 let g:catppuccin_flavour = 'mocha'
@@ -112,3 +113,6 @@ nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
 
 " Autocmds
 autocmd FileType php setlocal ts=4 sw=4 sts=4 autoindent
+
+au InsertLeave * lua require('lint').try_lint()
+au BufWritePost * FormatWrite

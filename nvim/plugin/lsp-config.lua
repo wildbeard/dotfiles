@@ -50,8 +50,8 @@ local attachFn = function(isVolar)
     buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
     buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
 
-    -- This _should_ place nicely with eslint_d and null_ls
-    if client.server_capabilities.documentFormattingProvider then
+    -- Disable volar's formatting in preference of eslint
+    if client.server_capabilities.documentFormattingProvider and not isVolar then
       vim.cmd([[
         augroup LspFormatting
             autocmd! * <buffer>
@@ -101,16 +101,8 @@ lspinstaller.on_server_ready(function(server)
         }
       }
     }
-  elseif server.name == "sumneko_lua" then
-    opts.settings = {
-      Lua = {
-        diagnostics = {
-          globals = { 'vim' }
-        }
-      }
-    }
-  elseif server.name == "tsserver" then -- or server.name == "volar" then
-    opts.on_attach = attachFn(true)
+  -- elseif server.name == "tsserver" then -- or server.name == "volar" then
+    -- opts.on_attach = attachFn(true)
   end
 
   server:setup(opts)
@@ -125,7 +117,7 @@ lspconfig.volar.setup {
     'typescript',
     'javascript',
   },
-  on_attach = attachFn(false),
+  on_attach = attachFn(true),
   on_new_config = on_new_config,
   init_options = {
     typescript = {
@@ -136,15 +128,25 @@ lspconfig.volar.setup {
 
 lspconfig.cssls.setup {}
 
-local null_ls = require('null-ls')
+require('lint').linters_by_ft = {
+  javascript = { 'eslint_d' },
+  typescript = { 'eslint_d' },
+  vue = { 'eslint_d' },
+}
 
-null_ls.setup({
-  sources = {
-    null_ls.builtins.diagnostics.eslint_d.with({
-      diagnostics_format = "#{m} (#{s}: #{c})"
-    }),
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.eslint_d,
-  },
-  on_attach = attachFn(false)
-})
+require('formatter').setup{
+  logging = true,
+  log_level = vim.log.levels.DEBUG,
+  filetype = {
+    vue = require('formatter.filetypes.javascript').eslint_d,
+    javascript = {
+      require('formatter.filetypes.javascript').eslint_d,
+    },
+    typescript = {
+      require('formatter.filetypes.typescript').eslint_d,
+    },
+    ["*"] = {
+      require('formatter.filetypes.any').remove_trailing_whitespace
+    }
+  }
+}
