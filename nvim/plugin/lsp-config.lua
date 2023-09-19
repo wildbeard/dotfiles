@@ -50,7 +50,7 @@ local attachFn = function(isVolar)
     buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
     buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
 
-    -- Disable volar's formatting in preference of eslint
+    -- This _should_ place nicely with eslint_d and null_ls
     if client.server_capabilities.documentFormattingProvider and not isVolar then
       vim.cmd([[
         augroup LspFormatting
@@ -134,16 +134,27 @@ require('lint').linters_by_ft = {
   vue = { 'eslint_d' },
 }
 
+local prettierFn = function()
+  return {
+    exe = './node_modules/.bin/prettier',
+    args = {
+      '--stdin-filepath',
+      require('formatter.util').get_current_buffer_file_path(),
+    },
+    stdin = true,
+  }
+end
 require('formatter').setup{
   filetype = {
     vue = {
-      require('formatter.filetypes.javascript').eslint_d,
+      prettierFn,
+      require('formatter.filetypes.vue').eslint_d,
     },
     javascript = {
-      require('formatter.filetypes.javascript').eslint_d,
+      prettierFn
     },
     typescript = {
-      require('formatter.filetypes.typescript').eslint_d,
+      prettierFn
     },
     ["*"] = {
       require('formatter.filetypes.any').remove_trailing_whitespace

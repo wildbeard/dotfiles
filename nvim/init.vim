@@ -113,6 +113,7 @@ nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
 
 " Autocmds
 autocmd FileType php setlocal ts=4 sw=4 sts=4 autoindent
+autocmd FileType vue,javascript,typescript setlocal colorcolumn=100
 
 au InsertLeave * lua require('lint').try_lint()
 au BufWritePost * FormatWrite
