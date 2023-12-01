@@ -108,41 +108,56 @@ lspinstaller.on_server_ready(function(server)
   server:setup(opts)
 end)
 
-lspconfig.volar.setup {
-  cmd = volar_cmd,
-  root_dir = volar_root_dir,
-  filetypes = {
-    'vue',
-    'json',
-    'typescript',
-    'javascript',
-  },
-  on_attach = attachFn(true),
-  on_new_config = on_new_config,
-  init_options = {
-    typescript = {
-      tsdk = typescript_path,
-    },
-  }
-}
+-- Disable volar until I'm back in Vue-Land :')
+-- lspconfig.volar.setup {
+--   cmd = volar_cmd,
+--   root_dir = volar_root_dir,
+--   filetypes = {
+--     'vue',
+--     'json',
+--     'typescript',
+--     'javascript',
+--   },
+--   on_attach = attachFn(true),
+--   on_new_config = on_new_config,
+--   init_options = {
+--     typescript = {
+--       tsdk = typescript_path,
+--     },
+--   }
+-- }
 
-lspconfig.cssls.setup {}
+lspconfig.graphql.setup{}
+
+lspconfig.cssls.setup {
+  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+}
 
 require('lint').linters_by_ft = {
   javascript = { 'eslint_d' },
   typescript = { 'eslint_d' },
+  typescriptreact = { 'eslint_d' },
   vue = { 'eslint_d' },
 }
 
 local prettierFn = function()
-  return {
-    exe = './node_modules/.bin/prettier',
+  config = {
+    exe = '/Users/prestonhaddock/.nvm/versions/node/v18.18.2/bin/prettier',
     args = {
       '--stdin-filepath',
-      require('formatter.util').get_current_buffer_file_path(),
+      require('formatter.util').get_current_buffer_file_path()
     },
-    stdin = true,
+    stdin = true
   }
+  configPath = lspconfig_util.find_node_modules_ancestor(require('formatter.util').get_current_buffer_file_path())
+  fileExists = vim.fn.filereadable(configPath .. '/.prettierrc')
+
+  if configPath and fileExists == 1 then
+    table.insert(config.args, '--config')
+    table.insert(config.args, configPath .. '/.prettierrc')
+  end
+
+  return config
 end
 require('formatter').setup{
   filetype = {
