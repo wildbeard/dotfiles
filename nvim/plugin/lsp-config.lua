@@ -1,6 +1,7 @@
 local lspinstaller = require 'nvim-lsp-installer'
 local lspconfig = require 'lspconfig'
 local lspconfig_util = require 'lspconfig.util'
+local formatterUtil = require 'formatter.util'
 
 local keymaps = {
   { "n", "gd", "vim.lsp.buf.definition", { buffer = 0 } },
@@ -64,7 +65,8 @@ local attachFn = function(isVolar)
   return attach
 end
 
-local typescript_path = '/home/press/.nvm/versions/node/v16.18.1/lib/node_modules/typescript/lib'
+-- local typescript_path = '/usr/local/lib/node_modules/typescript/lib'
+local typescript_path = '/Users/prestonhaddock/.nvm/versions/node/v18.18.2/lib/node_modules/typescript/lib'
 
 local function on_new_config(new_config, new_root_dir)
   local function get_typescript_server_path(root_dir)
@@ -82,7 +84,8 @@ local function on_new_config(new_config, new_root_dir)
   end
 end
 
-local volar_cmd = { 'vue-language-server', '--stdio' }
+-- local volar_cmd = { 'vue-language-server', '--stdio' }
+local volar_cmd = { '/Users/prestonhaddock/.nvm/versions/node/v18.18.2/bin/vue-language-server', '--stdio' }
 local volar_root_dir = lspconfig_util.root_pattern 'package.json'
 
 lspinstaller.on_server_ready(function(server)
@@ -142,14 +145,14 @@ require('lint').linters_by_ft = {
 
 local prettierFn = function()
   config = {
-    exe = '/Users/prestonhaddock/.nvm/versions/node/v18.18.2/bin/prettier',
+    exe = 'prettier',
     args = {
       '--stdin-filepath',
-      require('formatter.util').get_current_buffer_file_path()
+      formatterUtil.escapePath(formatterUtil.get_current_buffer_file_path())
     },
     stdin = true
   }
-  configPath = lspconfig_util.find_node_modules_ancestor(require('formatter.util').get_current_buffer_file_path())
+  configPath = lspconfig_util.find_node_modules_ancestor(formatterUtil.get_current_buffer_file_path())
   fileExists = vim.fn.filereadable(configPath .. '/.prettierrc')
 
   if configPath and fileExists == 1 then
@@ -169,6 +172,9 @@ require('formatter').setup{
       prettierFn
     },
     typescript = {
+      prettierFn
+    },
+    typescriptreact = {
       prettierFn
     },
     ["*"] = {
