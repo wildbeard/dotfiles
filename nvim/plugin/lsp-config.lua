@@ -148,7 +148,7 @@ local prettierFn = function()
     exe = 'prettier',
     args = {
       '--stdin-filepath',
-      formatterUtil.escapePath(formatterUtil.get_current_buffer_file_path())
+      formatterUtil.escape_path(formatterUtil.get_current_buffer_file_path())
     },
     stdin = true
   }
