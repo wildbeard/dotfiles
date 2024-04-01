@@ -168,37 +168,20 @@ require('lazy').setup {
         tsserver = {
           filetypes = { 'vue', 'javascript', 'typescript', 'typescriptreact' },
           init_options = {
-            typescript = {
-              tsdk = '/Users/press/.nvm/versions/node/v18.18.2/lib/node_modules/typescript/lib',
-            },
             plugins = {
               {
                 name = '@vue/typescript-plugin',
-                location = '/Users/press/.nvm/versions/node/v18.18.2/lib/node_modules/@vue/typescript-plugin/lib',
+                location =
+                '/home/press/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server', -- vue_language_server_path,
                 languages = { 'vue' },
               },
             },
           },
         },
-        volar = {
-          init_options = {
-            typescript = {
-              tsdk = '/Users/press/.nvm/versions/node/v18.18.2/lib/node_modules/typescript/lib',
-            },
-          },
-        },
-        intelephense = {
-          intelephense = {
-            licenceKey = '00GEQR961O987WT',
-          },
-          settings = {
-            licenseKey = '00GEQR961O987WT',
-            files = {
-              associations = { '*.php' },
-            },
-          },
-        },
+        volar = {},
+        intelephense = {},
         tailwindcss = {},
+        -- eslint = {},
       }
 
       require('mason').setup()
@@ -206,6 +189,7 @@ require('lazy').setup {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua',
+        'volar',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -223,7 +207,7 @@ require('lazy').setup {
   {
     'stevearc/conform.nvim',
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function()
         return {
           timeout_ms = 500,
@@ -235,6 +219,7 @@ require('lazy').setup {
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         typescriptreact = { 'prettier' },
+        vue = { 'prettier', 'eslint_d' },
       },
     },
   },
@@ -249,7 +234,7 @@ require('lazy').setup {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'html', 'lua', 'php', 'markdown', 'css' },
+      ensure_installed = { 'html', 'lua', 'php', 'markdown', 'css', 'scss' },
       auto_install = true,
       highlight = {
         enable = true,
@@ -387,7 +372,6 @@ require('lazy').setup {
     end,
   },
   'mfussenegger/nvim-lint',
-  -- 'mhartington/formatter.nvim',
 }
 
 require('lint').linters_by_ft = {
@@ -396,28 +380,6 @@ require('lint').linters_by_ft = {
   typescriptreact = { 'eslint_d' },
   vue = { 'eslint_d' },
 }
-
-local prettierFn = function()
-  local util = require 'formatter.util'
-  local config = {
-    exe = 'prettier',
-    args = {
-      '--stdin-filepath',
-      util.escape_path(util.get_current_buffer_file_path()),
-    },
-    stdin = true,
-  }
-  local configPath = require('lspconfig.util').find_node_modules_ancestor(util.get_current_buffer_file_path())
-  local fileExists = vim.fn.filereadable(configPath .. '/.prettierrc')
-
-  -- @todo: Support other prettierrc file types
-  if configPath and fileExists == 1 then
-    table.insert(config.args, '--config')
-    table.insert(config.args, configPath .. '/.prettierrc')
-  end
-
-  return config
-end
 
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
@@ -438,17 +400,18 @@ autocmd('Filetype', {
 })
 
 autocmd('Filetype', {
-  desc = 'Auto Indents PHP',
+  desc = 'Sets a column at 80 chars for Prettier formatting',
   group = augroup('filetype-php', { clear = true }),
   pattern = { 'vue', 'javascript', 'typescript', 'typescriptreact' },
   command = 'setlocal colorcolumn=80',
 })
 
-autocmd('BufWritePre', {
-  desc = 'Auto formatting',
-  group = augroup('all-file-format', { clear = true }),
-  pattern = { '*' },
-  callback = function()
-    vim.lsp.buf.format()
-  end,
-})
+-- This was causing Vue to not format properly
+-- autocmd('BufWritePre', {
+--   desc = 'Auto formatting',
+--   group = augroup('all-file-format', { clear = true }),
+--   pattern = { '*' },
+--   callback = function()
+--     vim.lsp.buf.format()
+--   end,
+-- })
