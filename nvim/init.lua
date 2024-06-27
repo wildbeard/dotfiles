@@ -2,7 +2,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Do you have a nerd font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- Line Numbers
 vim.opt.number = true
@@ -85,6 +85,7 @@ require('lazy').setup {
           return vim.fn.executable 'make' == 1
         end,
       },
+      'burntsushi/ripgrep',
       'nvim-telescope/telescope-ui-select.nvim',
       {
         'nvim-tree/nvim-web-devicons',
@@ -181,15 +182,15 @@ require('lazy').setup {
         volar = {},
         intelephense = {},
         tailwindcss = {},
-        -- eslint = {},
       }
 
       require('mason').setup()
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua',
+        -- 'stylua',
         'volar',
+        'goimports',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -215,6 +216,7 @@ require('lazy').setup {
         }
       end,
       formatters_by_ft = {
+        go = { 'goimports' },
         lua = { 'stylua' },
         javascript = { 'prettier' },
         typescript = { 'prettier' },
@@ -407,11 +409,15 @@ autocmd('Filetype', {
 })
 
 -- This was causing Vue to not format properly
--- autocmd('BufWritePre', {
---   desc = 'Auto formatting',
---   group = augroup('all-file-format', { clear = true }),
---   pattern = { '*' },
---   callback = function()
---     vim.lsp.buf.format()
---   end,
--- })
+autocmd('BufWritePre', {
+  desc = 'Auto formatting',
+  group = augroup('all-file-format', { clear = true }),
+  pattern = { '*' },
+  callback = function()
+    if vim.bo.filetype == 'vue' then
+      return
+    end
+
+    vim.lsp.buf.format()
+  end,
+})
