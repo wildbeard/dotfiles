@@ -45,6 +45,11 @@ vim.keymap.set('n', '<C-l>', ':bnext<cr>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Page up and center' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Page down and center' })
 
+-- Copilot
+vim.g.copilot_no_tab_complete = true
+vim.keymap.set('i', '<C-Space>', 'copilot#Accept("\\<CR>")', { expr = true, replace_keycodes = false })
+vim.keymap.set('n', '<M-.>', '<Plug>(copilot-suggest)')
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -132,6 +137,7 @@ require('lazy').setup {
           map('gD', vim.lsp.buf.declaration, 'Go to declaration')
           map('gr', vim.lsp.buf.rename, 'Rename')
           map('ga', vim.lsp.buf.code_action, 'Code Action')
+          map('fr', vim.lsp.buf.references, 'Find References')
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
@@ -207,21 +213,23 @@ require('lazy').setup {
   },
   {
     'stevearc/conform.nvim',
+    event = 'BufWritePre',
     opts = {
       notify_on_error = true,
       format_on_save = function()
         return {
-          timeout_ms = 500,
+          async = true,
+          timeout_ms = 2500,
           lsp_fallback = true,
         }
       end,
       formatters_by_ft = {
         go = { 'goimports' },
         lua = { 'stylua' },
-        javascript = { 'prettier' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
-        vue = { 'prettier', 'eslint_d' },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
+        typescriptreact = { 'prettierd' },
+        vue = { 'prettierd', 'eslint_d' },
       },
     },
   },
@@ -374,7 +382,16 @@ require('lazy').setup {
     end,
   },
   'mfussenegger/nvim-lint',
+  'github/copilot.vim',
 }
+
+-- Testing GDScript
+require('lspconfig')['gdscript'].setup({
+  name = 'Godot',
+  -- cmd = { 'ncat', '1270.0.0.1', '6005' },
+  -- command = { 'ncat', '1270.0.0.1', '6005' },
+  command = { 'godot-wsl-lsp', '--host', '127.0.0.1', '6004' },
+})
 
 require('lint').linters_by_ft = {
   javascript = { 'eslint_d' },
@@ -409,15 +426,15 @@ autocmd('Filetype', {
 })
 
 -- This was causing Vue to not format properly
-autocmd('BufWritePre', {
-  desc = 'Auto formatting',
-  group = augroup('all-file-format', { clear = true }),
-  pattern = { '*' },
-  callback = function()
-    if vim.bo.filetype == 'vue' then
-      return
-    end
-
-    vim.lsp.buf.format()
-  end,
-})
+--autocmd('BufWritePre', {
+--  desc = 'Auto formatting',
+--  group = augroup('all-file-format', { clear = true }),
+--  pattern = { '*' },
+--  callback = function()
+--    if vim.bo.filetype == 'vue' then
+--      return
+--    end
+--
+--    vim.lsp.buf.format()
+--  end,
+--})
