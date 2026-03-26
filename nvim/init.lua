@@ -232,6 +232,15 @@ require("lazy").setup({
         end,
       })
 
+      local vue_ls_path = vim.fn.stdpath "data"
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+      local vue_plugin = {
+        name = "@vue/typescript-plugin",
+        location = vue_ls_path,
+        languages = { "vue" },
+        configNamespace = "typescript",
+      }
+
       local servers = {
         stylua = {},
         lua_ls = {
@@ -269,6 +278,7 @@ require("lazy").setup({
             Lua = {},
           },
         },
+        --[[
         ts_ls = {
           filetypes = {
             "javascript",
@@ -286,6 +296,26 @@ require("lazy").setup({
             },
           },
         },
+        ]]
+        --
+        vtsls = {
+          settings = {
+            vtsls = {
+              tsserver = {
+                globalPlugins = {
+                  vue_plugin,
+                },
+              },
+            },
+          },
+          filetypes = {
+            "typescript",
+            "javascript",
+            "typescriptreact",
+            "javascriptreact",
+            "vue",
+          },
+        },
         intelephense = {
           settings = {
             intelephense = {
@@ -299,7 +329,6 @@ require("lazy").setup({
       vim.list_extend(ensure_installed, {
         -- Others
         "vue_ls",
-        "vtsls",
       })
 
       require("mason-lspconfig").setup { ensure_installed = ensure_installed }
