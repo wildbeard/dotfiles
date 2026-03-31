@@ -61,7 +61,7 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Page down and center" })
 
 -- Add a vertical column in the buffer to visualize cutoff
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "vue", "javascript", "typescript" },
+  pattern = { "vue", "javascript", "typescript", "typescriptreact", "javascriptreact" },
   group = vim.api.nvim_create_augroup("frontend-color-column", { clear = true }),
   callback = function()
     vim.opt_local.colorcolumn = "80"
@@ -401,9 +401,11 @@ require("lazy").setup({
       end,
       formatters_by_ft = {
         lua = { "stylua" },
-        javascript = { "prettierd" },
-        typescript = { "prettierd" },
+        javascript = { "prettierd", "eslint_d" },
+        typescript = { "prettierd", "eslint_d" },
         vue = { "prettierd", "eslint_d" },
+        javascriptreact = { "prettierd", "eslint_d" },
+        typescriptreact = { "prettierd", "eslint_d" },
         php = { "pint" },
       },
       formatters = {
@@ -472,6 +474,30 @@ require("lazy").setup({
     dependencies = { "folke/snacks.nvim" },
     config = true,
     keys = {},
+  },
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      local lint = require "lint"
+      lint.linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+        vue = { "eslint_d" },
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          if vim.bo.modifiable then
+            lint.try_lint()
+          end
+        end,
+      })
+    end,
   },
 }, {
   ui = {
