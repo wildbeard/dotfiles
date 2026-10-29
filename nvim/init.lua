@@ -320,6 +320,7 @@ require("lazy").setup({
           settings = {
             intelephense = {
               format = { enable = false },
+              completion = { maxItems = 1000 },
             },
           },
         },
@@ -335,9 +336,10 @@ require("lazy").setup({
       local getCapabilities = require("blink.cmp").get_lsp_capabilities
 
       for name, server in pairs(servers) do
-        local capabilities = getCapabilities(server)
+        -- local capabilities = getCapabilities(server)
+        server.capabilities = getCapabilities(server.capabilities)
 
-        vim.lsp.config(name, capabilities)
+        vim.lsp.config(name, server)
         vim.lsp.enable(name)
       end
     end,
@@ -465,8 +467,11 @@ require("lazy").setup({
         default = { "lsp", "path", "buffer" },
       },
       snippets = { preset = "luasnip" },
-      fuzzy = { implementation = "lua" },
+      fuzzy = { implementation = "prefer_rust_with_warning" },
       signature = { enabled = true },
+      completion = {
+        documentation = { auto_show = true, auto_show_delay_ms = 200 },
+      },
     },
   },
   {
