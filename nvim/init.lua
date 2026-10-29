@@ -326,13 +326,29 @@ require("lazy").setup({
         },
       }
 
-      local ensure_installed = vim.tbl_keys(servers or {})
+      -- Servers mason-lspconfig can't map to a Mason package (lspconfig name -> Mason package name)
+      local mason_only = {
+      }
+
+      local ensure_installed = vim.tbl_filter(function(name)
+        return mason_only[name] == nil
+      end, vim.tbl_keys(servers or {}))
       vim.list_extend(ensure_installed, {
         -- Others
         "vue_ls",
       })
 
       require("mason-lspconfig").setup { ensure_installed = ensure_installed }
+
+      local registry = require "mason-registry"
+      registry.refresh(function()
+        for _, package_name in pairs(mason_only) do
+          local ok, pkg = pcall(registry.get_package, package_name)
+          if ok and not pkg:is_installed() then
+            pkg:install()
+          end
+        end
+      end)
       local getCapabilities = require("blink.cmp").get_lsp_capabilities
 
       for name, server in pairs(servers) do
@@ -491,13 +507,35 @@ require("lazy").setup({
         javascriptreact = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         vue = { "eslint_d" },
+        php = { "phpstan" },
       }
+
+      lint.linters.phpstan.args = {
+        "analyse",
+        "--error-format=json",
+        "--no-progress",
+        "--no-interaction",
+        "--memory-limit=2G",
+        function()
+          return vim.fn.expand "%:p"
+          -- return vim.api.nvim_buf_get_name(0)
+        end,
+      }
+      -- lint.linters.phpstan.cwd = vim.fs.root(0, { "phpstan.neon", "composer.json" })
+      lint.linters.phpstan.cwd = (function()
+        return vim.fs.root(0, { "phpstan.neon", "composer.json" })
+      end)()
+
+      local original_parser = lint.linters.phpstan.parser
+      lint.linters.phpstan.parser = function(output, bufnr, linter_cwd)
+        return original_parser(output, bufnr, linter_cwd)
+      end
 
       local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
         group = lint_augroup,
         callback = function()
-          if vim.bo.modifiable then
+          if vim.bo.modifiable and vim.api.nvim_buf_get_name(0) ~= "" then
             lint.try_lint()
           end
         end,
