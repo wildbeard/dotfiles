@@ -202,7 +202,7 @@ require("lazy").setup({
           map("gd", vim.lsp.buf.definition, "Go to definition")
           map("gD", vim.lsp.buf.declaration, "Go to declaration")
           map("gr", vim.lsp.buf.rename, "Rename")
-          map("ga", vim.lsp.buf.action, "Code action")
+          map("ga", vim.lsp.buf.code_action, "Code action")
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
 
