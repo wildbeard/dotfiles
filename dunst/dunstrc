@@ -1,0 +1,26 @@
+[global]
+monitor = 0
+follow = mouse
+
+font = JetBrains Nerd Font
+
+markup = full
+format = "<b>%s</b>\n%b"
+word_wrap = yes
+
+frame_color = "#89b4fa"
+separator_color= frame
+highlight = "#89b4fa"
+
+[urgency_low]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[urgency_normal]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[urgency_critical]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+frame_color = "#f38ba8"
