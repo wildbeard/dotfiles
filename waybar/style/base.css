@@ -1,16 +1,3 @@
-@define-color base     #1e1e2e;
-@define-color mantle   #181825;
-@define-color text     #cdd6f4;
-@define-color red      #f38ba8;
-@define-color peach    #fab387;
-@define-color yellow   #f9e2af;
-@define-color green    #a6e3a1;
-@define-color teal     #94e2d5;
-@define-color sapphire #74c7ec;
-@define-color blue     #89b4fa;
-@define-color lavender #b4befe;
-@define-color mauve    #cba6f7;
-
 /* --- Reset --- */
 * {
   border: none;
@@ -30,18 +17,16 @@ window#waybar {
   background: transparent;
 }
 
-/* --- Strips --- */
-/* Two strips that mirror each other: a square corner where the brush
- * starts, a soft one where it lifts off. A faint wave tint sits on top. */
 .modules-left {
+  /* Maybe some other time */
 }
 
-/* The right strip ends in a vertical ink bar, like the mounting of a hanging scroll */
 .modules-right {
+  /* Maybe some other time */
 }
 
-/* The center is a darker ink slab with soft corners, framed like the strips */
 .modules-center {
+  /* Maybe some other time */
 }
 
 /* --- Modules --- */
@@ -55,28 +40,10 @@ window#waybar {
 #language,
 #pulseaudio,
 #network,
-#tray,
-#custom-updates,
-#custom-notification {
+#tray {
   color: @base;
   padding: 2px 12px;
   transition: color 200ms ease;
-}
-
-#mpris:hover,
-#cpu:hover,
-#memory:hover,
-#temperature:hover,
-#power-profiles-daemon:hover,
-#idle_inhibitor:hover,
-#language:hover,
-#backlight:hover,
-#pulseaudio:hover,
-#network:hover,
-#battery:hover,
-#custom-updates:hover,
-#custom-notification:hover {
-  color: @base;
 }
 
 #pulseaudio {
@@ -123,6 +90,26 @@ window#waybar {
   background: @mauve;
   background: #181825;
   border-radius: 0 0 10px 10px;
+}
+
+#tray menu {
+  color: @text;
+  background: @base;
+  border: 1px solid @lavender;
+  border-radius: 10px;
+}
+
+#tray menu menuitem {
+  padding: 2px 4px;
+}
+
+#tray menu menuitem:hover {
+  margin: 0 2px;
+  background: @surface;
+}
+
+#tray menu menuitem:hover > label {
+  margin: 0 -2px;
 }
 
 /* --- Tooltips and tray menus --- */
