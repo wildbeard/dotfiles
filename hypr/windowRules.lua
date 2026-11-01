@@ -4,9 +4,9 @@ local floatingWindows = {
 	{ class = "steam_app_4227351746", title = "^(Battle.net - Chats and Groups)$" },
 }
 
-for _, m in ipairs(floatingWindows) do
+for i, m in ipairs(floatingWindows) do
 	hl.window_rule({
-		name = "floating-windows",
+		name = "floating-windows" .. i,
 		match = m,
 
 		float = true,
